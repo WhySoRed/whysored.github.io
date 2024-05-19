@@ -140,11 +140,6 @@
     </style>
   </head>
   <body>
-    <div class="mumabox">
-      <div class="muma">
-        <img src="./muma.svg">
-      </div>
-    </div>
     <div class="box404"></div>
     <div class="backtext">
       <p onclick="location.href = './'">回去吧，回到可以回去的地方。</p>
@@ -239,6 +234,19 @@
           }, 1000);
           window.requestAnimationFrame(colorAnimation);
         }
+      }
+
+      
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        const mumabox = document.createElement("div");
+        mumabox.classList.add("mumabox");
+        const muma = document.createElement("div");
+        muma.classList.add("muma");
+        const mumaImg = document.createElement("img");
+        mumaImg.src = "./muma.svg";
+        muma.appendChild(mumaImg);
+        mumabox.appendChild(muma);
+        document.body.appendChild(mumabox);
       }
     </script>
   </body>
