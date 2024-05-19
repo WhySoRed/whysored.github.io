@@ -1,5 +1,244 @@
-<html>
-<body>
-  <p>无人问津之处</p>
-</body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>目的地不存在</title>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #181818;
+        }
+
+        .cube {
+          background-color: aqua;
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: aliceblue;
+        }
+
+        .cube {
+          background-color: #181818;
+        }
+      }
+
+      body {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+      }
+
+      :root {
+        --box404--width: calc(min(50vw,308px));
+        --box404--height: calc(var(--box404--width) / 11 * 5);
+      }
+
+      .box404 {
+        margin-top: 15vh;
+        margin-bottom: 0;
+        width: var(--box404--width);
+        height: var(--box404--height);
+        display: grid;
+        grid-template-rows: repeat(5, 1fr);
+        grid-template-columns: repeat(11, 1fr);
+      }
+
+      .box404 div.cell {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .cell div.cube {
+        border-radius: 10%;
+        width: 90%;
+        height: 90%;
+      }
+
+      .cube.twinkle {
+        animation-name: twinkle;
+        animation-duration: 1s;
+      }
+
+      @keyframes twinkle {
+        50% {
+          width: 40%;
+          height: 40%;
+          opacity: 0%;
+        }
+
+        100% {
+          width: 90%;
+          height: 90%;
+          opacity: 100%;
+        }
+      }
+      .backtext {
+        margin-top: 15vh;
+        color: white;
+        font-size: 1.5em;
+      }
+
+      .backtext p:hover {
+        cursor: pointer;
+      }
+
+      .mumabox {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+      }
+
+      .muma {
+        top: -25vh;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        animation: wave 10s infinite;
+      }
+
+      @keyframes wave {
+        0% {
+          top: -25vh;
+        }
+
+        50% {
+          top: -15vh;
+        }
+        100% {
+          top: -25vh;
+        }
+      }
+
+
+      .muma img {
+        height: 150vh;
+        width: auto;
+        position: relative;
+        filter: blur(7px);
+        animation: muma 60s linear infinite;
+      }
+
+      @keyframes muma {
+        0% {
+          position: absolute;
+          left: -20vw;
+        }
+
+        100% {
+          position: absolute;
+          left: 120vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mumabox">
+      <div class="muma">
+        <img src="./muma.svg">
+      </div>
+    </div>
+    <div class="box404"></div>
+    <div class="backtext">
+      <p onclick="location.href = './'">回去吧，回到可以回去的地方。</p>
+    </div>
+    <script>
+      /*
+      const fzfArr = [
+        1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1,
+        1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+        1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1,
+        0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1,
+        0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1,
+      ];
+      */
+      const fzfArr = [
+        1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1,
+        1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0,
+        0, 1, 1, 0, 0, 0, 1,
+      ];
+      const box = document.querySelector(".box404");
+      for (const i in fzfArr) {
+        if (fzfArr[i]) {
+          const cell = document.createElement("div");
+          cell.style["grid-row"] = Math.floor(i / 11) + 1;
+          cell.style["grid-column"] = (i % 11) + 1;
+          cell.style.opacity = 1 - (i / fzfArr.length) * 0.2;
+          cell.classList.add("cell");
+          const cube = document.createElement("div");
+          cube.classList.add("cube");
+          cell.appendChild(cube);
+          box.appendChild(cell);
+        }
+      }
+
+      const fzfBox = document.querySelector(".box404");
+      fzfBox.addEventListener("click", clickBox);
+      let isMouseDown = false;
+      document.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        isMouseDown = true;
+      })
+      document.addEventListener("mouseup", (event) => {
+        isMouseDown = false;
+      })
+      fzfBox.addEventListener("mousemove", (event) => {
+        if (isMouseDown) {
+          clickBox(event);
+        }
+      })
+
+      let colorfulColor = "#de3163";
+
+      function clickBox(event) {
+        if (event.target.classList.contains("cube")) {
+          event.target.style.backgroundColor = colorfulColor;
+          event.target.classList.add("colorful");
+        } else if (event.target.classList.contains("cell")) {
+          event.target.firstElementChild.style.backgroundColor = colorfulColor;
+          event.target.firstElementChild.classList.add("colorful");
+        }
+        if (
+          document.querySelectorAll(".cube.colorful").length ===
+          document.querySelectorAll(".cube").length
+        ) {
+          fzfBox.removeEventListener("click", clickBox);
+          colorAnimation();
+        }
+      }
+
+      function colorAnimation() {
+        if (document.querySelectorAll(".cube.colorful").length === 0) {
+          colorfulColor = `hsl(
+            ${323 + Math.floor(Math.random() * 40)},
+            ${62 + Math.floor(Math.random() * 20)}%,
+            ${43 + Math.floor(Math.random() * 20)}%
+          )`;
+          fzfBox.addEventListener("click", clickBox);
+          return;
+        } else {
+          const colorfulCubeList = document.querySelectorAll(".cube.colorful");
+          const randomCube =
+            colorfulCubeList[
+              Math.floor(Math.random() * colorfulCubeList.length)
+            ];
+          randomCube.classList.add("twinkle");
+          randomCube.classList.remove("colorful");
+          setTimeout(() => {
+            randomCube.style.backgroundColor = "";
+          }, 500);
+          setTimeout(() => {
+            randomCube.classList.remove("twinkle");
+          }, 1000);
+          window.requestAnimationFrame(colorAnimation);
+        }
+      }
+    </script>
+  </body>
 </html>
